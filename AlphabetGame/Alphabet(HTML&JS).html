@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AlphabetG</title>
+    <link rel="stylesheet" href="AlphabetG.css">
+</head>
+<body>
+ <div id="statusMessage"></div>
+ <div id="correctCounter"></div>
+<div class="game-container">
+    <img id="Alpha" src="placeholder.png" alt="Random Letter" />
+    <button id="playAgainBtn" style="display:none;">Play Again</button>
+</div>
+
+ 
+<script>
+var keys = ['p' , 'q' , 'z' , 'u'];
+var timeduration = 3000;
+var counter = 0;
+var currentkey = '';
+var timeout;
+function Randomkey(){
+    var newkey;
+    do{
+    newkey = keys[Math.floor(Math.random() * keys.length)];
+    }
+    while (newkey === currentkey);
+    
+        return newkey
+
+}
+function showrandomkey(){
+    currentkey = Randomkey();
+    document.getElementById('Alpha').src = currentkey + '.png';
+    resetTimeout();
+}
+function UScore(){
+    document.getElementById('correctCounter').textContent = 'Score : ' + counter; 
+}
+function resetTimeout(){
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+    document.getElementById('statusMessage').textContent = 'You lost ! looser';
+    UScore();
+    document.removeEventListener('keydown', handleKeyPress);
+    document.getElementById('playAgainBtn').style.display = 'inline';
+
+    },
+    timeduration);
+}
+function handleKeyPress(event){
+    if (event.key === currentkey){
+        counter++;
+        document.getElementById('statusMessage').textContent = 'Good one!'
+        UScore();
+        setTimeout(showrandomkey, 1000);
+    }
+    else{
+        document.getElementById('statusMessage').textContent = 'Nope !';
+        UScore();
+        document.removeEventListener('keydown', handleKeyPress);
+    }
+}
+    document.addEventListener('DOMContentLoaded', () =>{
+        document.addEventListener('keydown', handleKeyPress);
+        showrandomkey();
+        UScore();
+        document.getElementById('playAgainBtn').addEventListener('click', () => {
+    counter = 0;
+    UScore();
+    document.getElementById('statusMessage').textContent = '';
+    document.getElementById('playAgainBtn').style.display = 'none';
+    document.addEventListener('keydown', handleKeyPress);
+    showrandomkey();
+});
+
+    });
+</script>
+</body>
+</html> 
